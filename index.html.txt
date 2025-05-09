@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Wkrótce zaczynamy – Newsletter</title>
+  <style>
+    body {
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 2em;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+    input[type="email"] {
+      width: 100%;
+      padding: 0.5em;
+      margin: 1em 0;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 0.5em 1em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Wkrótce zaczynamy!</h1>
+    <form id="newsletter-form"
+          action="https://formspree.io/f/XYZ123"  <!-- ← Twój endpoint -->
+          method="POST">
+      <!-- To pole ustawi Reply‑To na e‑mail użytkownika -->
+      <input type="email"
+             name="email"
+             placeholder="Twój e‑mail"
+             required>
+      <!-- Temat wiadomości przyjdzie jako "Dopisz mnie" -->
+      <input type="hidden"
+             name="_subject"
+             value="Dopisz mnie">
+      <!-- Po wysłaniu możesz przekierować na stronę podziękowania -->
+      <input type="hidden"
+             name="_next"
+             value="https://ekorolni.pl/thankyou.html">
+      <button type="submit">DOPISZ MNIE DO NEWSLETTERA</button>
+    </form>
+    <div id="form-status" style="margin-top:1em;"></div>
+  </div>
+
+  <script>
+    // opcjonalnie: AJAX‑owe wysyłanie i komunikat bez przeładowania strony
+    const form = document.getElementById('newsletter-form');
+    const status = document.getElementById('form-status');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = new FormData(form);
+      try {
+        const resp = await fetch(form.action, {
+          method: form.method,
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (resp.ok) {
+          status.textContent = 'Dziękujemy! Sprawdź swoją skrzynkę.';
+          form.reset();
+        } else {
+          const err = await resp.json();
+          status.textContent = err.error || 'Wystąpił błąd.';
+        }
+      } catch (err) {
+        status.textContent = 'Błąd sieci.';
+      }
+    });
+  </script>
+</body>
+</html>
