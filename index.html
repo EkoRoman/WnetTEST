@@ -19,7 +19,27 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       text-align: center;
-      width: 300px;
+      width: 400px;           /* zwiększona szerokość */
+      max-width: 90%;
+      box-sizing: border-box;
+    }
+    .logo {
+      margin-bottom: 1em;
+    }
+    .logo img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+    h1 {
+      margin-bottom: 0.5em;
+    }
+    .info {
+      font-size: 0.9em;
+      color: #555;
+      margin-bottom: 1em;
+      line-height: 1.4;
     }
     input[type="email"] {
       width: 100%;
@@ -31,34 +51,48 @@
       padding: 0.5em 1em;
       cursor: pointer;
     }
+    #form-status {
+      margin-top: 1em;
+      font-size: 0.9em;
+      color: green;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- logo wyśrodkowane nad ramką -->
+    <div class="logo">
+      <img src="logo_v3_265x120.png" alt="Logo">
+    </div>
+
     <h1>Wkrótce zaczynamy!</h1>
+
+    <!-- dodatkowy tekst informacyjny -->
+    <div class="info">
+      Napisz do nas na <a href="mailto:ekorolni@gmail.com">ekorolni@gmail.com</a><br>
+      lub wpisz tu swój email a powiadomimy cię mejlowo o otwarciu.<br>
+      Warto czekać! Będą promocje!
+    </div>
+
     <form id="newsletter-form"
           action="https://formspree.io/f/manobnvg"
-          method="POST"><!-- ← mój endpoint -->
-      <!-- To pole ustawi Reply‑To na e‑mail użytkownika -->
+          method="POST">
       <input type="email"
              name="email"
              placeholder="Twój e‑mail"
              required>
-      <!-- Temat wiadomości przyjdzie jako "Dopisz mnie" -->
       <input type="hidden"
              name="_subject"
              value="Dopisz mnie">
-      <!-- Po wysłaniu możesz przekierować na stronę podziękowania -->
       <input type="hidden"
              name="_next"
              value="https://ekorolni.pl/thankyou.html">
-      <button type="submit">DOPISZ MNIE DO NEWSLETTERA</button>
+      <button type="submit">POINFORMUJCIE MNIE</button>
     </form>
-    <div id="form-status" style="margin-top:1em;"></div>
+    <div id="form-status"></div>
   </div>
 
   <script>
-    // opcjonalnie: AJAX‑owe wysyłanie i komunikat bez przeładowania strony
     const form = document.getElementById('newsletter-form');
     const status = document.getElementById('form-status');
     form.addEventListener('submit', async e => {
@@ -71,7 +105,7 @@
           headers: { 'Accept': 'application/json' }
         });
         if (resp.ok) {
-          status.textContent = 'Dziękujemy! Sprawdź swoją skrzynkę.';
+          status.textContent = 'Dziękujemy! Powiadomimy Cię gdy tylko będziemy gotowi!';
           form.reset();
         } else {
           const err = await resp.json();
